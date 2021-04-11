@@ -7,6 +7,7 @@ module.exports = {
   plugins: [
     '@snowpack/plugin-react-refresh',
     '@snowpack/plugin-dotenv',
+    '@snowpack/plugin-postcss',
     [
       '@snowpack/plugin-typescript',
       {
@@ -25,6 +26,7 @@ module.exports = {
   },
   packageOptions: {
     /* ... */
+    knownEntrypoints: ['normalize.css'],
   },
   devOptions: {
     /* ... */
