@@ -18,6 +18,25 @@ document.oncontextmenu = (e) => {
   e.preventDefault();
 };
 
+const Files = [
+  {
+    FileName: faker.system.commonFileName(),
+    imgSrc: faker.image.imageUrl(),
+  },
+  {
+    FileName: faker.system.commonFileName(),
+    imgSrc: faker.image.imageUrl(),
+  },
+  {
+    FileName: faker.system.commonFileName(),
+    imgSrc: faker.image.imageUrl(),
+  },
+  {
+    FileName: faker.system.commonFileName(),
+    imgSrc: faker.image.imageUrl(),
+  },
+];
+
 const TreeElement: BP.ITreeNode[] = [
   {
     id: v4(),
@@ -536,13 +555,58 @@ function App(p: Props) {
                       elevation={BP.Elevation.ONE}
                       interactive={true}
                       className="m-3 p-4 w-56"
-                      onContextMenu={(e) => {
-                        setNameFolder(e.target.innerHTML);
+                      onContextMenu={() => {
+                        setNameFolder(node.label.toString());
                       }}
                     >
                       <div className="flex items-center">
                         <BP.Icon icon="folder-close" className="mr-3" />
                         <p>{node.label}</p>
+                      </div>
+                    </BP.Card>
+                  </BP2.ContextMenu2>
+                );
+              })}
+            </div>
+          </div>
+          <BP.Divider />
+          <div>
+            <p className="ml-2 my-2 font-medium text-gray-600">Cartelle</p>
+            <div className="flex flex-wrap">
+              {Files.map((file, i) => {
+                return (
+                  <BP2.ContextMenu2
+                    key={i}
+                    content={
+                      <BP.Menu>
+                        <BP.MenuItem
+                          text="Rimuovi"
+                          intent="danger"
+                          icon="trash"
+                        />
+                        <BP.Divider />
+                        <BP.MenuItem
+                          text="Info File"
+                          icon="info-sign"
+                          onClick={() => {
+                            setDrawerStatus(true);
+                          }}
+                        />
+                      </BP.Menu>
+                    }
+                  >
+                    <BP.Card
+                      key={i}
+                      elevation={BP.Elevation.ONE}
+                      interactive={true}
+                      className="m-3 p-4 w-56"
+                      onContextMenu={() => {
+                        setNameFolder(file.FileName);
+                      }}
+                    >
+                      <div className="flex items-center">
+                        <BP.Icon icon="document" className="mr-3" />
+                        <p className="truncate">{file.FileName}</p>
                       </div>
                     </BP.Card>
                   </BP2.ContextMenu2>
