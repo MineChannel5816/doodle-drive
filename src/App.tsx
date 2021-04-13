@@ -1,7 +1,7 @@
 import React, { SyntheticEvent, useCallback, useState } from 'react';
 import * as BP from '@blueprintjs/core';
 import * as BP2 from '@blueprintjs/popover2';
-import faker from 'faker';
+import faker, { fake } from 'faker';
 import 'normalize.css';
 import '@blueprintjs/core/lib/css/blueprint.css';
 import '@blueprintjs/icons/lib/css/blueprint-icons.css';
@@ -135,6 +135,7 @@ const TreeElement: BP.ITreeNode[] = [
 ];
 
 function App(p: Props) {
+  const [DrawerStatus, setDrawerStatus] = useState<boolean>(false);
   const [DialogStatus, setDialogStatus] = useState<boolean>(false);
   const [textOnChange, setTextOnChange] = useState<string>(
     'Cartella senza titolo',
@@ -189,7 +190,6 @@ function App(p: Props) {
     }
   };
 
-  const [Toast, setToast] = useState();
   let toaster: BP.Toaster;
   let refHandlers = (ref: BP.Toaster) => {
     toaster = ref;
@@ -198,6 +198,7 @@ function App(p: Props) {
   let addToast = () => {
     toaster.show({ message: 'Deleted!', intent: 'danger' });
   };
+
   return (
     <>
       <BP.Navbar
@@ -293,6 +294,86 @@ function App(p: Props) {
           <div>
             <BP.Toaster position={BP.Position.TOP} ref={refHandlers} />
           </div>
+          <BP.Drawer
+            isOpen={DrawerStatus}
+            size={BP.Drawer.SIZE_SMALL}
+            usePortal={true}
+            hasBackdrop={true}
+            canOutsideClickClose={true}
+            canEscapeKeyClose={true}
+            title={nameFolder}
+            icon="document"
+            onClose={() => setDrawerStatus(false)}
+            isCloseButtonShown={true}
+          >
+            <BP.Tabs
+              large={true}
+              id="TabsList"
+              defaultSelectedTabId="detail"
+              className="m-4 "
+            >
+              <BP.Tab
+                id="detail"
+                title="Dettagli"
+                panel={
+                  <div>
+                    <BP.Divider />
+                    <div className="flex flex-col">
+                      <BP.Icon
+                        icon="folder-close"
+                        iconSize={100}
+                        className="self-center my-16"
+                      />
+                      <BP.Divider />
+                      {/* <img src={faker.random.image()}/><BP.Divider /> */}
+                      <div className="flex m-2">
+                        <p className="flex-grow text-gray-500">Tipo</p>
+                        <p>Cartella</p>
+                      </div>
+                      <div className="flex m-2">
+                        <p className="flex-grow text-gray-500">Dimensioni</p>
+                        <p>52MB</p>
+                      </div>
+                      <div className="flex m-2">
+                        <p className="flex-grow text-gray-500">Posizione</p>
+                        <p>Il mio drive</p>
+                      </div>
+                      <div className="flex m-2">
+                        <p className="flex-grow text-gray-500">Propietario</p>
+                        <p>io</p>
+                      </div>
+                      <div className="flex m-2">
+                        <p className="flex-grow text-gray-500">Modificato</p>
+                        <p>{faker.date.past().toDateString()}</p>
+                      </div>
+                      <div className="flex m-2">
+                        <p className="flex-grow text-gray-500">Creato</p>
+                        <p>{faker.date.past().toDateString()}</p>
+                      </div>
+                    </div>
+                  </div>
+                }
+              />
+              <BP.Tab
+                id="activity"
+                title="Attività"
+                panel={
+                  <div>
+                    <BP.Divider />
+                    {faker.date.past().toDateString()}
+
+                    <div className="flex items-center">
+                      <img
+                        src={faker.image.imageUrl()}
+                        className="w-12 h-12 rounded-full mr-4 mt-2"
+                      />
+                      <div>Tu hai creato {nameFolder}</div>
+                    </div>
+                  </div>
+                }
+              />
+            </BP.Tabs>
+          </BP.Drawer>
           <div className="flex">
             <div className="flex-grow">
               <BP2.Popover2
@@ -430,6 +511,19 @@ function App(p: Props) {
                                 newTree.nodes[0].childNodes?.splice(i, 1);
                                 setTree(newTree);
                                 addToast();
+                                return;
+                              }
+                            });
+                          }}
+                        />
+                        <BP.Divider />
+                        <BP.MenuItem
+                          text="Info File"
+                          icon="info-sign"
+                          onClick={() => {
+                            Tree.nodes[0].childNodes?.map((node, i) => {
+                              if (node.label === nameFolder) {
+                                setDrawerStatus(true);
                                 return;
                               }
                             });
